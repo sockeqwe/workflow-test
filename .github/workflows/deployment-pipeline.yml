@@ -14,6 +14,7 @@ permissions:
 jobs:
   commit-cycle:
     runs-on: ubuntu-latest
+    environment: regular-environment
 
     steps:
       - name: commit-cycle
@@ -22,6 +23,7 @@ jobs:
   acceptance-cycle:
     needs: [commit-cycle]
     runs-on: ubuntu-latest
+    environment: regular-environment
 
     steps:
       - name: acceptance-cycle
@@ -30,7 +32,17 @@ jobs:
   deployment-cycle:
     needs: [commit-cycle, acceptance-cycle]
     runs-on: ubuntu-latest
+    environment: regular-environment
 
     steps:
       - name: deployment-cycle
         run: echo "deployment completed"
+
+  promote-beta-to-production:
+    needs: [deployment-cycle]
+    runs-on: ubuntu-latest
+    environment: android-production
+    
+    steps:
+        - name: promote-beta-to-production
+          run: echo "promoted beta to production"
