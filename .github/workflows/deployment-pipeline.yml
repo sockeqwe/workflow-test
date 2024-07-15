@@ -1,0 +1,36 @@
+name: Deployment Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: write
+  checks: write
+  actions: read
+
+jobs:
+  commit-cycle:
+    runs-on: ghcr.io/cirruslabs/ubuntu-runner-amd64:22.04
+
+    steps:
+      - name: commit-cycle
+        run: echo "commit cycle completed"
+
+  acceptance-cycle:
+    needs: [commit-cycle]
+    runs-on: ghcr.io/cirruslabs/ubuntu-runner-amd64:22.04
+
+    steps:
+      - name: acceptance-cycle
+        run: echo "acceptance cycle completed"
+
+  deployment-cycle:
+    needs: [commit-cycle, acceptance-cycle]
+    runs-on: ghcr.io/cirruslabs/ubuntu-runner-amd64:22.04
+
+    steps:
+      - name: deployment-cycle
+        run: echo "deployment completed"
