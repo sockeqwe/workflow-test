@@ -38,6 +38,27 @@ jobs:
     steps:
       - name: deployment-cycle
         run: echo "deployment completed"
+      - name: Parse version and create JSON
+        id: create_json
+        run: |
+          VERSION="${{ steps.extract_version.outputs.VERSION }}"
+          IFS='.' read -r major minor patch <<< "$VERSION"
+          echo "full=\"$VERSION\"" >> $GITHUB_ENV
+          echo "major=\"$major\"" >> $GITHUB_ENV
+          echo "minor=\"$minor\"" >> $GITHUB_ENV
+          echo "patch=\"$patch\"" >> $GITHUB_ENV
+          echo '{' > version.json
+          echo "  \"full\": \"$VERSION\"," >> version.json
+          echo "  \"major\": \"$major\"," >> version.json
+          echo "  \"minor\": \"$minor\"," >> version.json
+          echo "  \"patch\": \"$patch\"" >> version.json
+          echo '}' >> version.json
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: version-json
+          path: version.json
 
   promote-beta-to-production:
     needs: [deployment-cycle]
