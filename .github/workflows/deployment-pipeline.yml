@@ -41,12 +41,10 @@ jobs:
       - name: Parse version and create JSON
         id: create_json
         run: |
-          VERSION="${{ steps.extract_version.outputs.VERSION }}"
-          IFS='.' read -r major minor patch <<< "$VERSION"
-          echo "full=\"$VERSION\"" >> $GITHUB_ENV
-          echo "major=\"$major\"" >> $GITHUB_ENV
-          echo "minor=\"$minor\"" >> $GITHUB_ENV
-          echo "patch=\"$patch\"" >> $GITHUB_ENV
+          VERSION="15.16.1"
+          major="15"
+          minor="16"
+          patch="1"
           echo '{' > version.json
           echo "  \"full\": \"$VERSION\"," >> version.json
           echo "  \"major\": \"$major\"," >> version.json
@@ -55,7 +53,7 @@ jobs:
           echo '}' >> version.json
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: version-json
           path: version.json
